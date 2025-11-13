@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your savings goals with beautiful piggy banks. Manage expenses, filter transactions, and visualize your progress.">
+    <title>💰 Savings Tracker - Manage Your Piggy Banks</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title">💰 Savings Tracker</h1>
+            <p class="header-subtitle">Track your savings goals with beautiful piggy banks</p>
+        </header>
+
+        <!-- Add New Piggy Bank Button -->
+        <div class="add-section">
+            <button class="btn-add" id="btnAddNew" aria-label="Add new piggy bank">
+                <span class="btn-icon" aria-hidden="true">+</span>
+                Add New Piggy Bank
+            </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-section" id="summaryCards">
+            <!-- Summary cards will be dynamically added here -->
+        </div>
+
+        <!-- Search and Filter Controls -->
+        <div class="controls-section" role="search" aria-label="Search and filter controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search piggy banks by name..." 
+                       aria-label="Search piggy banks by name" />
+            </div>
+            <div class="filter-controls">
+                <select id="sortSelect" class="sort-select" aria-label="Sort piggy banks">
+                    <option value="name-asc">Sort: Name (A-Z)</option>
+                    <option value="name-desc">Sort: Name (Z-A)</option>
+                    <option value="amount-desc">Sort: Amount (High-Low)</option>
+                    <option value="amount-asc">Sort: Amount (Low-High)</option>
+                </select>
+                <button class="btn-control" id="btnDataControls" 
+                        aria-label="Open data management options">
+                    <span aria-hidden="true">⚙️</span> Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Piggy Banks Dashboard -->
+        <div class="dashboard" id="dashboard" role="main" aria-label="Piggy banks list">
+            <!-- Piggy bank cards will be dynamically added here -->
+        </div>
+
+        <!-- Modal for Adding New Piggy Bank -->
+        <div class="modal" id="addModal" role="dialog" aria-labelledby="addModalTitle" aria-modal="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="addModalTitle">Create New Piggy Bank</h2>
+                    <button class="btn-close" id="btnCloseModal" aria-label="Close modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="piggyName">Piggy Bank Name</label>
+                        <input type="text" id="piggyName" placeholder="e.g., Summer Vacation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="piggyCategory">Category</label>
+                        <select id="piggyCategory">
+                            <option value="vacation">✈️ Vacation/Travel</option>
+                            <option value="food">🍽️ Food & Dining</option>
+                            <option value="transportation">🚗 Transportation</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="education">🎓 Education</option>
+                            <option value="shopping">🛒 Shopping</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btnCancel">Cancel</button>
+                    <button class="btn btn-primary" id="btnCreate">Create Piggy Bank</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Editing Piggy Bank -->
+        <div class="modal" id="editModal" role="dialog" aria-labelledby="editModalTitle" aria-modal="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="editModalTitle">Edit Piggy Bank</h2>
+                    <button class="btn-close" id="btnCloseEdit" aria-label="Close modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editPiggyName">Piggy Bank Name</label>
+                        <input type="text" id="editPiggyName" placeholder="e.g., Summer Vacation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPiggyCategory">Category</label>
+                        <select id="editPiggyCategory">
+                            <option value="vacation">✈️ Vacation/Travel</option>
+                            <option value="food">🍽️ Food & Dining</option>
+                            <option value="transportation">🚗 Transportation</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="education">🎓 Education</option>
+                            <option value="shopping">🛒 Shopping</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btnDeletePiggy">🗑️ Delete</button>
+                    <button class="btn btn-primary" id="btnSaveEdit">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Data Management -->
+        <div class="modal" id="dataModal" role="dialog" aria-labelledby="dataModalTitle" aria-modal="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="dataModalTitle">Data Management</h2>
+                    <button class="btn-close" id="btnCloseData" aria-label="Close modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="data-controls">
+                        <button class="btn btn-primary" id="btnExportData">
+                            📥 Export Data (JSON)
+                        </button>
+                        <button class="btn btn-primary" id="btnImportData">
+                            📤 Import Data (JSON)
+                        </button>
+                        <input type="file" id="fileImport" accept=".json" style="display: none;" />
+                        <button class="btn btn-secondary" id="btnClearData">
+                            🗑️ Clear All Data
+                        </button>
+                    </div>
+                    <div class="data-info">
+                        <p><strong>Export:</strong> Download all your piggy banks and transactions as a JSON file.</p>
+                        <p><strong>Import:</strong> Load data from a previously exported JSON file.</p>
+                        <p><strong>Clear:</strong> Delete all piggy banks and transactions (cannot be undone).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Viewing Transactions -->
+        <div class="modal" id="transactionModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2 id="transactionTitle">Piggy Bank Details</h2>
+                    <button class="btn-close" id="btnCloseTransaction">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="transaction-summary">
+                        <div class="summary-card">
+                            <span class="summary-label">Total Saved</span>
+                            <span class="summary-value" id="totalAmount">$0.00</span>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-label">Transactions</span>
+                            <span class="summary-value" id="transactionCount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="add-transaction-section">
+                        <h3>Add Transaction</h3>
+                        <div class="transaction-form">
+                            <input type="number" id="transactionAmount" placeholder="Amount" step="0.01" min="0.01">
+                            <input type="text" id="transactionNote" placeholder="Note (optional)">
+                            <button class="btn btn-primary" id="btnAddTransaction">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="transactions-list">
+                        <h3>Transaction History</h3>
+                        <div id="transactionsList">
+                            <p class="empty-state">No transactions yet. Add your first transaction above!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
